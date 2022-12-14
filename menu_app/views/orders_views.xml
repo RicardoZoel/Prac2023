@@ -1,0 +1,123 @@
+<odoo>
+    <data>
+      <record model="ir.ui.view" id="menu_app.orders_model_form">
+        <field name="name">Orders Form</field>
+        <field name="model">menu_app.orders_model</field>
+        <field name="arch" type="xml">
+          <form string="Orders">
+            <header>
+                <button name="finalizar" type="object" string="Pagado" class="oe_highlight" attrs="{'readonly': [('order_active','=', 'False')]}" states="PE"/>
+                <field name="state" widget="statusbar"></field>
+            </header>
+            <sheet>
+              <group name="top">
+                <group name="left">
+                  <field name="table" attrs="{'readonly': [('order_active','=', 'False')]}"/>      
+                  <field name="customer" attrs="{'readonly': [('order_active','=', 'False')]}"/>    
+                  <field name="date" attrs="{'invisible': [('order_active','=', 'true')]}"/>        
+                </group>
+                <group name="right">
+                  <field name="waiter" attrs="{'readonly': [('order_active','=', 'False')]}"/>     
+                  <field name="currency_id" invisible="True"/>     
+                  <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}" force_save="True"/>
+                  <field name="description" widget="html"/>     
+                </group>  
+              </group>
+              <group name="bottom">
+                <field name="order_active" invisible="True"/>   
+                <field name="quantiti" attrs="{'readonly': [('order_active','=', 'False')]}">
+                  <tree>
+                    <field name="quantiti"/>
+                    <field name="foods"/>
+                  </tree>
+                  <form>
+                    <field name="quantiti"/>
+                    <field name="foods"/>
+                  </form>
+                </field>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+      <!-- explicit list view definition -->
+      <record model="ir.ui.view" id="menu_app.orders_list">
+        <field name="name">Orders list</field>
+        <field name="model">menu_app.orders_model</field>
+        <field name="arch" type="xml">
+          <tree  decoration-danger="order_active == False" decoration-success="order_active == True">
+            <field name="table"/> 
+            <field name="waiter"/>  
+            <field name="customer"/>    
+            <field name="total"/>               
+            <field name="order_active" invisible="True"/>   
+          </tree>
+        </field>
+      </record>
+  
+      <record model="ir.ui.view" id="menu_app.orders_calendar">
+        <field name="name">Orders</field>
+        <field name="model">menu_app.orders_model</field>
+        <field name="arch" type="xml">
+          <calendar date_start="date" color="order_active" mode="day" event_open_popup="True" form_view_id="menu_app.orders_form" quick_add="False">
+            <field name="table"/>
+            <field name="waiter"/>  
+            <field name="customer"/>  
+            <field name="date"/>  
+          </calendar>
+        </field>
+      </record>
+
+      <record model="ir.ui.view" id="menu_app.orders_graph">
+        <field name="name">Orders Graph</field>
+        <field name="model">menu_app.orders_model</field>
+        <field name="arch" type="xml">
+          <graph type="bar">
+            <field name="total" type="measure"/>
+            <field name="date" interval="month" type="row"/>
+          </graph>
+        </field>
+      </record>
+
+<!-- 
+      <record model="ir.ui.view" id="menu_app.orders_pivot">
+        <field name="name">Orders Pivot</field>
+        <field name="model">menu_app.orders_model</field>
+        <field name="arch" type="xml">
+          <pivot>
+            <field name="table" type="row"/>
+            <field name="date"/>
+            <field name="lines_ids"/>
+            <field name="base"/>
+            <field name="vat"/>
+            <field name="total" type="measure"/>
+            
+          </pivot>
+        </field>
+      </record>-->
+     <!--  actions opening views on models -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_orders">
+        <field name="name">Orders window</field>
+        <field name="res_model">menu_app.orders_model</field>
+        <field name="view_mode">calendar,graph,tree,form</field>
+      </record>
+  
+      <!-- server action to the one above -->
+  <!--
+      <record model="ir.actions.server" id="menu_app.action_server">
+        <field name="name">menu_app server</field>
+        <field name="model_id" ref="model_menu_app_menu_app"/>
+        <field name="state">code</field>
+        <field name="code">
+          action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "tree,form",
+            "res_model": model._name,
+          }
+        </field>
+      </record>
+  -->
+  
+      
+    </data>
+  </odoo>

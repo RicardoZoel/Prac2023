@@ -1,0 +1,101 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="menu_app.foods_model_kanban">
+      <field name="name">Kanban List</field>
+      <field name="model">menu_app.foods_model</field>
+      <field name="arch" type="xml">
+        <kanban class="o_res_partner_kanban">
+          <field name="image"/>
+          <field name="name"/>
+          <field name="category"/>
+          <field name="price"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="oe_kanban_global_click">
+                <div class="o_kanban_image">
+                  <field name="image" nolabel="1" widget="image" class="oe_right oe_avatar"/>
+                </div>
+                <div class="oe_kanban_details">
+                  <strong>
+                    <field name="name" class="oe_inline"/>
+                    <field name="category" class="oe_inline"/>
+                  </strong>
+                  <div t-if="record.image.value">
+                    <t t-esc="record.image.value"/>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="menu_app.foods_model_form">
+      <field name="name">Foods Form</field>
+      <field name="model">menu_app.foods_model</field>
+      <field name="arch" type="xml">
+        <form string="Foods">
+          <sheet>
+            <group name="top">
+              <group name="left">
+                <field name="name"/>      
+                <field name="image"/>          
+              </group>
+              <group name="right">
+                <field name="category"/>     
+                <field name="currency_id" invisible="True"/>     
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="description" widget="html"/>     
+              </group>  
+            </group>
+            <group name="bottom">
+              <field name="ingridients">
+                <tree>
+                  <field name="name"/>
+                  <field name="allergens"/>
+                </tree>
+                </field>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="menu_app.foods_list">
+      <field name="name">Foods list</field>
+      <field name="model">menu_app.foods_model</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="category"/>
+          <field name="price"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="menu_app.action_window_foods">
+      <field name="name">Foods window</field>
+      <field name="res_model">menu_app.foods_model</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="menu_app.action_server">
+      <field name="name">menu_app server</field>
+      <field name="model_id" ref="model_menu_app_menu_app"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    
+  </data>
+</odoo>

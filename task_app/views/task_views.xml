@@ -1,0 +1,132 @@
+<odoo>
+  <data>
+    <!-- Pagina formulario -->
+    
+    <record model="ir.ui.view" id="task_app.task_model_form">
+      <field name="name">Task Form</field>
+      <field name="model">task_app.task_model</field>
+      <field name="arch" type="xml">
+        <!-- etiqueta form es la base -->
+        <form string="Task">
+          <!-- Botones  name=referencia a  a el modelo -->
+          <header>
+            <button name="changeState" type="object" string="Change State" class="oe_highlight" confirm="Are you sure to change state of this task"/>
+            <button name="cleanFinished" type="object" string="Clean finished tasks" confirm="Are you sure to delete all finished tasks"/>
+          </header>
+          <!-- Mostrar el modelo como una hoja add etiqueta sheet -->
+          <sheet>
+            <!-- Organizacion de los botones  el group name=saber_el_orden-->
+            <group name="top">
+              <group name="left">
+                <!-- Para que se vean los campos hay que ponerlos entre la etiqueta group-->
+                <field name="name"/>
+                <field name="category"/>
+                <field name="description"/> 
+                <field name="creationdate"/>
+                <field name="lastUpdate"/>                           
+              </group>
+              <group name="right">
+                <field name="is_done"/>
+                <field name="now"/>
+                <field name="user"/>
+                <field name="active" readonly="True" force_save="True" invisible="True"/>
+                <field name="criticalValue"/>
+                <!-- <field name="active" readonly="True" force_save="True"/>-->
+                                <!-- attrs="{'readonly' : True}"    para hacerlo readonly-->
+              </group>  
+          </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+
+
+
+<!-- Pagina de lista // sheet -->
+   <record model="ir.ui.view" id="task_app.task_model_list">
+      <field name="name">Task List</field>
+      <field name="model">task_app.task_model</field>
+      <field name="arch" type="xml">
+        <!-- Orden de la lista y la decoracion se relaciona con: is_done del MODELO-->
+        <tree decoration-danger="is_done == False">
+          <!-- Columnas que apareceran en la lista, tienen que tener el mismo nombre en el MODELO  -->
+          <field name="name"/>
+          <field name="is_done"/>
+          <!-- <field name="active" attrs="{'invisible' : True}" /> -->
+          <field name="category"/>
+          <field name="now"/>
+          <field name="criticalValue"/>   
+          
+        </tree>
+      </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="task_app.task_model_calendar">
+      <field name="name">Task Calendar</field>
+      <field name="model">task_app.task_model</field>
+      <field name="arch" type="xml">
+        <!-- calendario en vez de tree de la lista                      no mostrar event meeting = lleva al formulario-->
+        <calendar date_start="creationdate" color="category" mode="month" quick_add="False">
+          <!-- color - grupa por colores mode, modo meses-años o dias  -->
+          <field name="name"/>
+          <field name="category"/>
+          <field name="creationdate"/>  
+        </calendar>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="task_app.task_model_pivot">
+      <field name="name">Task Pivot</field>
+      <field name="model">task_app.task_model</field>
+      <field name="arch" type="xml">
+        
+        <pivot string="Pivot invoice">
+          <field name="name"/>
+          <field name="creationdate"/>
+        </pivot>
+      </field>
+    </record>
+
+
+
+
+
+
+
+    <!-- Pagina de busqueda -->
+
+  <record model="ir.ui.view" id="task_app.task_model_search">
+    <field name="name">Task Filters</field>
+    <field name="model">task_app.task_model</field>
+    <field name="arch" type="xml">
+      <search>
+    <!-- Filtros --> 
+        <field name="name"/>
+
+
+        <filter string="Finished" name="Finished" domain="[('is_done','=',True)]"/>
+          
+        <filter string="Not Finished" name="NotFinished" domain="[('is_done','!=',False)]"/>
+        
+        </search>
+    </field>
+  </record>      
+  <!-- Acciones del menu // Binding/Enlazar con el modelo-->
+  
+  <record model="ir.actions.act_window" id="task_app.action_window_task">
+    <field name="name"> Task Window</field>
+    <field name="res_model">task_app.task_model</field>
+    <field name="view_mode">tree,form,calendar,pivot</field>
+  </record>
+
+
+ 
+
+</data>
+</odoo>
+
+  
+      
