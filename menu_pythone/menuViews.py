@@ -43,7 +43,17 @@ def readBoolean(txt):
             return False
         else:
             print("Incorrect option, ONLY CAPS")
-
+def questionAddIng(first=True):
+    while True:
+        if first: Name=(input("Do you want to add a ingedient?(YES/NO):")) 
+        else: Name=(input("Do you want to add an other ingedient?(YES/NO):")) 
+        if Name=="YES":
+            return True
+        elif Name=="NO":
+            return False
+        else:
+            print("Incorrect option, ONLY CAPS")
+        pass
 def questionMod(txt):
     while True:
         Name=(input("You want to mod the "+txt+"(YES/NO):"))
@@ -78,7 +88,7 @@ def addIngrediente():
     allergens=readBoolean("Allergens")
     description=input("Description:")
     if contoler.addIngrediente(name,allergens,description):
-        print("The ingredient has been mod successfully")
+        print("The ingredient has been added successfully")
     else:
         print("There has been an unexpected error or the ingredient already exists")
     
@@ -115,25 +125,75 @@ def showIngrediente():
     if questionShow("ingredient"):
         id=readNumber("ID","int")
         if contoler.getIng(id,False):
-            print(contoler.getIng(id,True))
+            data = contoler.getIng(id,True)
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                if (a["name"]):
+                    print("\tAllergens: YES")
+                else:
+                    print("\tAllergens: NO")
+                if len(a["foods"])==0:
+                    print("\tIs in "+str(len(a["foods"]))+" products")
+                else:
+                    print("\tProducts:")
+                    for a in a["foods"]:
+                        dataFood=contoler.getFood(id,True)
+                        print("\t - "+dataFood["data"][0]["name"])
         else:
             print("This ingredient dont exist")
     else:
-        print(contoler.getIng("",True))
-
-
+        data = contoler.getIng("",True)
+        for a in data["data"]:
+            print(a["name"]+":")
+            print("\tID: "+str(a["id"]))
+            if (a["name"]):
+                print("\tAllergens: YES")
+            else:
+                print("\tAllergens: NO")
+            print("\tIs in "+str(len(a["foods"]))+" products")
 
 # ========================================== Category ==========================================
+def showCategory():
+    if questionShow("category"):
+        id=readNumber("ID","int")
+        if contoler.getCat(id,False):
+            data = contoler.getCat(id,True)
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                if len(a["foods"])==0:
+                    print("\tIs in "+str(len(a["foods"]))+" products")
+                else:
+                    print("\tProducts:")
+                    for a in a["foods"]:
+                        dataFood=contoler.getFood(id,True)
+                        print("\t - "+dataFood["data"][0]["name"])
+        else:
+            print("This category dont exist")
+    else:
+        data = contoler.getCat("",True)
+        print(data)
+        for a in data["data"]:
+            print(a["name"]+":")
+            print("\tID: "+str(a["id"]))
+            print("\tHas "+str(len(a["foods"]))+" foods")
+
+
 def addCategory():
     name=readtxt("NAME")
-    contoler.addCategory(name)
+    if contoler.addCategory(name):
+        print("The Category has been added successfully")
+    else:
+        print("There has been an unexpected error or the category already exists")
 
 def modCategory():
     id=readNumber("ID","int")
     if contoler.getIng(id,False):
         if questionMod("name"):
             name=readtxt("NAME")
-            contoler.modCategory(name)
+            contoler.modCategory(id,name)
+            print("The Category has been modified correctly")
     else:
         print("This ingredient dont exist")
         
@@ -141,9 +201,32 @@ def delCategory():
     id=readNumber("ID","int")
     if contoler.getCat(id,False):
         contoler.delCategory(id)
+        print("The ingredient has been removed successfully")
+
     else:
         print("This category dont exist")
 
+# ========================================== Products/Foods ==========================================
+def addFood():
+    name=readtxt("NAME")
+    price=readNumber("Price","Double")
+    description=input("Description:")
+    ingredients=[]
+    if questionAddIng():
+        while True:
+            ing=readNumber("ingredient","int")
+            if showIngrediente(id,False):
+                ingredients.append(ing)
+                if not questionAddIng(False):
+                    break
+            else:
+                print("This ingredient dont exist")
+    if questionAddCat():
+        cat=readNumber("ingredient","int")
+    if contoler.addCategory(name):
+        print("The Category has been mod successfully")
+    else:
+        print("There has been an unexpected error or the category already exists")
 contoler=menuControler.MenuCtrl()
 while(True):
     print("========= Menu =========")
@@ -175,18 +258,28 @@ while(True):
             delIngrediente()
     elif option==3:
         showIngrediente()
+
+
     elif option==4:
-        pass
+        addCategory()
     elif option==5:
-        pass
+        if questionModDel("Category"):
+            modCategory()
+        else:
+            delCategory()
     elif option==6:
-        pass
+        showCategory()
+
+    
     elif option==7:
-        pass
+        addFood()
     elif option==8:
-        pass
+        if questionModDel("Product"):
+            modFood()
+        else:
+            delFood()
     elif option==9:
-        pass
+        showFood()
     elif option==10:
         pass
     elif option==11:
@@ -196,5 +289,5 @@ while(True):
     elif option==13:
         pass
     elif option==14:
-        print("today "+contoler.getSaldo()+"€ has been obtained")
+        print("Today "+contoler.getSaldo()+"€ has been obtained")
         break

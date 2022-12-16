@@ -10,7 +10,7 @@ class MenuApp(http.Controller):
     @http.route('/menu_app/hello', auth='public', type="http")
     def indexHello(self, **kw):
         return "Hello, world"
-
+# ==================================
     @http.route(['/menu_app/getFoods','/menu_app/getFoods/<int:foodid>'], auth='public', type="http")
     def indexTask(self,foodid=None, **kw):
         if foodid:
@@ -21,7 +21,7 @@ class MenuApp(http.Controller):
         data={  "status":200,
                 "data":taskdata}
         return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
-        
+# ==================================        
     @http.route(['/menu_app/getIngridients','/menu_app/getIngridients/<int:ingridientsid>'], auth='public', type="http")
     def indexIngridients(self,ingridientsid=None, **kw):
         if ingridientsid:
@@ -32,7 +32,7 @@ class MenuApp(http.Controller):
         data={  "status":200,
                 "data":ingridientsdata}
         return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
-        
+# ==================================
     @http.route(['/menu_app/getCategory','/menu_app/getCategory/<int:categoryid>'], auth='public', type="http")
     def indexCategory(self,categoryid=None, **kw):
         if categoryid:
@@ -59,7 +59,7 @@ class MenuApp(http.Controller):
             data={ "status":404,
                     "error":e}
             return data
-
+# ==================================
     @http.route('/menu_app/addIngridients', auth='public', type='json', method="POST")
     def addIngridients(self, **kw):
         response=request.jsonrequest
@@ -72,7 +72,7 @@ class MenuApp(http.Controller):
             data={ "status":404,
                     "error":e}
             return data
-    
+# ==================================
     @http.route('/menu_app/addFoods', auth='public', type='json', method="POST")
     def addFoods(self, **kw):
         response=request.jsonrequest
@@ -101,7 +101,7 @@ class MenuApp(http.Controller):
             data = { "status": 404,
                     "error": e}
             return data
-
+# ==================================
     @http.route('/menu_app/updateIngridients/<int:ingridientsid>', auth='public', type='json', method="PUT")
     def updateIng(self, ingridientsid, **kw):
         response = request.jsonrequest
@@ -115,7 +115,7 @@ class MenuApp(http.Controller):
             data = { "status": 404,
                     "error": e}
             return data
-
+# ==================================
     @http.route('/menu_app/updateFood/<int:foodid>', auth='public', type='json', method="PUT")
     def updateFood(self, foodid, **kw):
         response = request.jsonrequest
@@ -131,17 +131,45 @@ class MenuApp(http.Controller):
             return data
       
 # ================================== DEL ==================================
-    @http.route('/menu_app/delIngridients', auth='public', type='json', method="PUT")
-    def delIng(self, ingridientsid, **kw):
-        response = request.jsonrequest
+    @http.route('/menu_app/delIngridients', auth='public', type='json', method="DELETE")
+    def delIng(self, **kw):
+        ingridientsid = request.jsonrequest["id"]
         try:
-            http.request.env["menu_app.ingridients_model"].sudo().unlink(response)
+            result=http.request.env["menu_app.ingridients_model"].sudo().search([("id", "=", ingridientsid)])
+            result.unlink()
             data = { "status": 200}
             return data
         except Exception as e:
             data = { "status": 404,
                     "error": e}
             return data
+# ==================================
+    @http.route('/menu_app/delFood', auth='public', type='json', method="DELETE")
+    def delFood(self, **kw):
+        foodid = request.jsonrequest["id"]
+        try:
+            result=http.request.env["menu_app.foods_model"].sudo().search([("id", "=", foodid)])
+            result.unlink()
+            data = { "status": 200}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
+# ==================================
+    @http.route('/menu_app/delCategory', auth='public', type='json', method="DELETE")
+    def delCat(self, **kw):
+        categoryid = request.jsonrequest["id"]
+        try:
+            result=http.request.env["menu_app.category_model"].sudo().search([("id", "=", categoryid)])
+            result.unlink()
+            data = { "status": 200}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
+# ==================================
 # class MenuApp(http.Controller):
 #     @http.route('/menu_app/menu_app/', auth='public')
 #     def index(self, **kw):
