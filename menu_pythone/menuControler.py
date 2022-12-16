@@ -26,6 +26,7 @@ class MenuCtrl():
     def addCategory(name):
         return True
 
+
 #===================================== MODIFI =====================================
 
     def modIngrediente(id,name,allergens,description):

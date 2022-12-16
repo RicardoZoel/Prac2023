@@ -129,7 +129,7 @@ class MenuApp(http.Controller):
             data = { "status": 404,
                     "error": e}
             return data
-        
+      
 # ================================== DEL ==================================
     @http.route('/menu_app/delIngridients', auth='public', type='json', method="PUT")
     def delIng(self, ingridientsid, **kw):
