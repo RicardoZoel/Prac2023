@@ -35,6 +35,24 @@ class MenuCtrl():
         else:
             return True
 
+    def addFood(self,name,precio,description,ingredients,category):
+        url = "http://localhost:8069/menu_app/addFoods/"
+        payload = {
+        "name": name,
+        "price": precio,
+        "description": description
+        }
+        if len(ingredients)>0:
+            payload["ingridients"]=ingredients
+        if category!=0:
+            payload["category"]=category
+        response = requests.post(url,json=payload)
+        data=response.json()
+        if data["result"]["status"]!=201:
+            return False
+        else:
+            return True
+
 
 #===================================== MODIFI =====================================
 
@@ -67,6 +85,26 @@ class MenuCtrl():
         else:
             return True
 
+    def modFood(self,id,name,precio,description,ingredients,category):
+        url = "http://localhost:8069/menu_app/updateFood/"+id
+        payload = {}
+        if name!="":
+            payload["name"]=name
+        if precio!="":
+            payload["price"]=precio
+        if description!="":
+            payload["description"]=description
+        if category!="":
+            payload["category"]=category
+        payload["ingridients"]=ingredients
+
+        response = requests.put(url,json=payload)
+        data=response.json()
+        if data["result"]["status"]!=200:
+            return False
+        else:
+            return True
+
 #===================================== DELETE =====================================
 
     def delIngrediente(self,id):
@@ -76,7 +114,6 @@ class MenuCtrl():
         }
         response = requests.put(url,json=payload)
         data=response.json()
-        print(data)
         return True
 
     def delCategory(self,id):
@@ -86,7 +123,6 @@ class MenuCtrl():
         }
         response = requests.put(url,json=payload)
         data=response.json()
-        print(data)
         return True
     
     def delFood(self,id):
@@ -96,7 +132,6 @@ class MenuCtrl():
         }
         response = requests.put(url,json=payload)
         data=response.json()
-        print(data)
         return True
 
 #===================================== SEARCH =====================================
@@ -106,7 +141,7 @@ class MenuCtrl():
         url = "http://localhost:8069/menu_app/getIngridients/"+id
         response = requests.get(url)
         data=response.json()
-        if data["status"]!=200:
+        if data["status"]!=200 or len(data["data"])==0:
             return False
         if send:
             return data
@@ -117,7 +152,7 @@ class MenuCtrl():
         url = "http://localhost:8069/menu_app/getFoods/"+id
         response = requests.get(url)
         data=response.json()
-        if data["status"]!=200:
+        if data["status"]!=200 or len(data["data"])==0:
             return False
         if send:
             return data
@@ -128,7 +163,7 @@ class MenuCtrl():
         url = "http://localhost:8069/menu_app/getCategory/"+id
         response = requests.get(url)
         data=response.json()
-        if data["status"]!=200:
+        if data["status"]!=200 or len(data["data"])==0:
             return False
         if send:
             return data

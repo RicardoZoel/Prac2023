@@ -19,11 +19,24 @@ import menuControler
 def readNumber(txt,i):
     while True:
         doble=(input(txt+"("+i+"):"))
-        if len(doble)>0:
-            if doble.isdecimal():
-                return doble
+        if i=="Double":
+            try:
+                doble=float(doble)
+                if doble>0:
+                    return str(doble)
+                else:
+                    print("Input a value > 0")
+            except:
+                print("Input a double value ")
         else:
-            print("Input a correct value ")
+            try:
+                doble=int(doble)
+                if doble>0:
+                    return str(doble)
+                else:
+                    print("Input a value > 0")
+            except:
+                print("Input a int value ")
 
 def readtxt(txt):
     while True:
@@ -43,6 +56,17 @@ def readBoolean(txt):
             return False
         else:
             print("Incorrect option, ONLY CAPS")
+def questionAddCat(first=True):
+    while True:
+        if first: Name=(input("Do you want to add a Category?(YES/NO):")) 
+        else: Name=(input("Do you want to change the Category?(YES/NO):")) 
+        if Name=="YES":
+            return True
+        elif Name=="NO":
+            return False
+        else:
+            print("Incorrect option, ONLY CAPS")
+        pass
 def questionAddIng(first=True):
     while True:
         if first: Name=(input("Do you want to add a ingedient?(YES/NO):")) 
@@ -129,7 +153,7 @@ def showIngrediente():
             for a in data["data"]:
                 print(a["name"]+":")
                 print("\tID: "+str(a["id"]))
-                if (a["name"]):
+                if (a["allergens"]):
                     print("\tAllergens: YES")
                 else:
                     print("\tAllergens: NO")
@@ -147,7 +171,7 @@ def showIngrediente():
         for a in data["data"]:
             print(a["name"]+":")
             print("\tID: "+str(a["id"]))
-            if (a["name"]):
+            if (a["allergens"]):
                 print("\tAllergens: YES")
             else:
                 print("\tAllergens: NO")
@@ -166,8 +190,8 @@ def showCategory():
                     print("\tIs in "+str(len(a["foods"]))+" products")
                 else:
                     print("\tProducts:")
-                    for a in a["foods"]:
-                        dataFood=contoler.getFood(id,True)
+                    for b in a["foods"]:
+                        dataFood=contoler.getFood(b,True)
                         print("\t - "+dataFood["data"][0]["name"])
         else:
             print("This category dont exist")
@@ -207,26 +231,132 @@ def delCategory():
         print("This category dont exist")
 
 # ========================================== Products/Foods ==========================================
+def showFood():
+    if questionShow("product"):
+        id=readNumber("ID","int")
+        if contoler.getFood(id,False):
+            data = contoler.getFood(id,True)
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                print("\tPrecio: "+str(a["price"])+"€")
+                print("\tCategory: "+a["category"][1])
+                print("\tDescripcion: "+str(a["description"]))
+                if len(a["ingridients"])==0:
+                    print("\tThis product dont have ingredients")
+                else:
+                    print("\tIngredients:")
+                    for b in a["ingridients"]:
+                        dataFood=contoler.getFood(str(b),True)
+                        print("\t - "+dataFood["data"][0]["name"])
+        else:
+            print("This ingredient dont exist")
+    else:
+        data = contoler.getFood("",True)
+        for a in data["data"]:
+            print(a["name"]+":")
+            print("\tID: "+str(a["id"]))
+            print("\tPrecio: "+str(a["price"])+"€")
+            print("\tCategory: "+a["category"]["name"])
+            print("\tDescripcion: "+str(a["description"]))
+            if len(a["ingridients"])==0:
+                print("\tThis product dont have ingredients")
+            else:
+                print("\tThis product have "+str(len(a["ingridients"]))+"ingredients")
 def addFood():
     name=readtxt("NAME")
     price=readNumber("Price","Double")
     description=input("Description:")
     ingredients=[]
+    cat=0
     if questionAddIng():
         while True:
             ing=readNumber("ingredient","int")
-            if showIngrediente(id,False):
-                ingredients.append(ing)
-                if not questionAddIng(False):
-                    break
+            if contoler.getIng(ing,False):
+                if ing in ingredients:
+                    print("This ingredient alredy inside")
+                else:
+                    ingredients.append(ing)
+                    if not questionAddIng(False):
+                        break
             else:
                 print("This ingredient dont exist")
     if questionAddCat():
-        cat=readNumber("ingredient","int")
-    if contoler.addCategory(name):
-        print("The Category has been mod successfully")
+        while True:
+            cat=readNumber("ingredient","int")
+            if contoler.getCat(cat,False):
+                break
+            else:
+                print("This ingredient dont exist")
+    if contoler.addFood(name,price,description,ingredients,cat):
+        print("The product has been added successfully")
     else:
-        print("There has been an unexpected error or the category already exists")
+        print("There has been an unexpected error or the food already exists")
+
+
+def modFood():
+    id=readNumber("ID","int")
+    if contoler.getFood(id,False):
+        data=contoler.getFood(id,True)
+        name=""
+        precio=""
+        description=""
+        ingredients=[]
+        if len(data["data"][0]["ingridients"])==0:
+            a=True
+        else:
+            a=False
+            for a in data["data"][0]["ingridients"]:
+                ingredients.append(a)
+        ingNum=len(ingredients)
+        category=""
+        if questionMod("name"):
+            name=readtxt("NAME")
+        if questionMod("precio"):
+            precio=readBoolean("precio")
+        if questionMod("the description"):
+            description=input("Description:")
+        if questionAddIng(a):
+            while True:
+                ing=readNumber("ingredient","int")
+                if contoler.getIng(ing,False):
+                    if ing in ingredients:
+                        print("This ingredient alredy inside")
+                    else:
+                        ingredients.append(ing)
+                        if not questionAddIng(False):
+                            break
+                else:
+                    print("This ingredient dont exist")
+        if len(data["data"][0]["category"])==False:
+            a=True
+        else:
+            a=False
+        if questionAddCat(a):
+            while True:
+                category=readNumber("category","int")
+                if contoler.getCat(category,False):
+                    break
+                else:
+                    print("This category dont exist")
+        if name=="" and precio=="" and description=="" and category=="" and len(ingredients)>ingNum:
+            print("Why")
+        elif contoler.modFood(id,name,precio,description,ingredients,category):
+            print("The ingredient has been modified correctly")
+        else:
+            print("There has been an unexpected error")
+    else:
+        print("This ingredient dont exist")
+
+def delFood():
+    id=readNumber("ID","int")
+    if contoler.getFood(id,False):
+        contoler.delFood(id)
+        print("The ingredient has been removed successfully")
+
+    else:
+        print("This category dont exist")
+# ========================================== Menu ==========================================
 contoler=menuControler.MenuCtrl()
 while(True):
     print("========= Menu =========")
