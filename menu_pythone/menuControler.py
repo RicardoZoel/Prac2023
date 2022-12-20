@@ -318,12 +318,10 @@ class MenuCtrl():
 
     def payOrder(self,id):
         url = "http://localhost:8069/menu_app/updateOrder/"+id
-        date=datetime.now()
         payload = {
             "order_active":"order_active",
             "table_active":"table_active",
-            "state":"PO",
-            "date":date
+            "state":"PO"
         }
         response = requests.put(url,json=payload)
         data=response.json()
