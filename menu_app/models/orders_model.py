@@ -10,7 +10,7 @@ class OrdersModel(models.Model):
     """waiter=camarero"""
     waiter = fields.Char(string="Waiter", required=True)
     currency_id=fields.Many2one("res.currency", string="Currency", default=lambda self:self.env.user.company_id.currency_id)
-    total = fields.Monetary(string="Price", required=True, readonly=True, default=0)
+    total = fields.Monetary(string="Price", readonly=True, default=0)
     description= fields.Html(string="Description")
     order_active=fields.Boolean(default=True, readonly=True)
     table_active=fields.Boolean(default=True, readonly=True)

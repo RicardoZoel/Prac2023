@@ -44,7 +44,29 @@ class MenuApp(http.Controller):
                 "data":categorydata}
         return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
 
+#===================================
+    @http.route(['/menu_app/getOrder','/menu_app/getOrder/<int:orderid>'], auth='public', type="http")
+    def indexOrder(self,orderid=None, **kw):
+        if orderid:
+            domain=[("id","=", orderid)]
+        else:
+            domain=[]
+        orderdata = http.request.env["menu_app.orders_model"].sudo().search_read(domain,["table","table_active","customer","waiter","total","description","quantiti","state","date"])
+        data={  "status":200,
+                "data":orderdata}
+        return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
 
+# ==================================
+    @http.route(['/menu_app/getQuantiti','/menu_app/getQuantiti/<int:quantitiid>'], auth='public', type="http")
+    def indexQuantiti(self,quantitiid=None, **kw):
+        if quantitiid:
+            domain=[("id","=", quantitiid)]
+        else:
+            domain=[]
+        quantitidata = http.request.env["menu_app.quantiti_model"].sudo().search_read(domain,["orders","quantiti","foods"])
+        data={  "status":200,
+                "data":quantitidata}
+        return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
 # ================================== Post ==================================
     
     @http.route('/menu_app/addCategory', auth='public', type='json', method="POST")
@@ -78,6 +100,33 @@ class MenuApp(http.Controller):
         response=request.jsonrequest
         try:
             result=http.request.env["menu_app.foods_model"].sudo().create(response)
+            data={ "status":201,
+                    "id":result.id}
+            return data
+        except Exception as e:
+            data={ "status":404,
+                    "error":e}
+            return data
+
+# ==================================
+    @http.route('/menu_app/addOrder', auth='public', type='json', method="POST")
+    def addOrder(self, **kw):
+        response=request.jsonrequest
+        try:
+            result=http.request.env["menu_app.orders_model"].sudo().create(response)
+            data={ "status":201,
+                    "id":result.id}
+            return data
+        except Exception as e:
+            data={ "status":404,
+                    "error":e}
+            return data
+# ==================================
+    @http.route('/menu_app/addQuantiti', auth='public', type='json', method="POST")
+    def addQuantiti(self, **kw):
+        response=request.jsonrequest
+        try:
+            result=http.request.env["menu_app.quantiti_model"].sudo().create(response)
             data={ "status":201,
                     "id":result.id}
             return data
@@ -129,6 +178,35 @@ class MenuApp(http.Controller):
             data = { "status": 404,
                     "error": e}
             return data
+# ==================================
+    @http.route('/menu_app/updateOrder/<int:orderid>', auth='public', type='json', method="PUT")
+    def updateOrder(self, orderid, **kw):
+        response = request.jsonrequest
+        try:
+            result = http.request.env["menu_app.orders_model"].sudo().search([("id", "=", orderid)])
+            result.write(response)
+            data = { "status": 200,
+                    "id": result.id}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
+
+# ==================================
+    @http.route('/menu_app/updateQuantiti/<int:quantitid>', auth='public', type='json', method="PUT")
+    def updateQuantiti(self, quantitid, **kw):
+        response = request.jsonrequest
+        try:
+            result = http.request.env["menu_app.quantiti_model"].sudo().search([("id", "=", quantitid)])
+            result.write(response)
+            data = { "status": 200,
+                    "id": result.id}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
       
 # ================================== DEL ==================================
     @http.route('/menu_app/delIngridients', auth='public', type='json', method="DELETE")
@@ -162,6 +240,33 @@ class MenuApp(http.Controller):
         categoryid = request.jsonrequest["id"]
         try:
             result=http.request.env["menu_app.category_model"].sudo().search([("id", "=", categoryid)])
+            result.unlink()
+            data = { "status": 200}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
+
+# ==================================
+    @http.route('/menu_app/delOrder', auth='public', type='json', method="DELETE")
+    def delOrder(self, **kw):
+        orderid = request.jsonrequest["id"]
+        try:
+            result=http.request.env["menu_app.orders_model"].sudo().search([("id", "=", orderid)])
+            result.unlink()
+            data = { "status": 200}
+            return data
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return data
+# ==================================
+    @http.route('/menu_app/delQuantiti', auth='public', type='json', method="DELETE")
+    def delQantiti(self, **kw):
+        quantitid = request.jsonrequest["id"]
+        try:
+            result=http.request.env["menu_app.quantiti_model"].sudo().search([("id", "=", quantitid)])
             result.unlink()
             data = { "status": 200}
             return data

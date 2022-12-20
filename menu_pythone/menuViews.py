@@ -16,6 +16,25 @@ import menuControler
 #       Category
 #name:char  -- readtxt
 #foods:One2many  -- readNumber
+def readTable():
+    while True:
+        doble=(input("Table (int):"))
+        try:
+            doble=int(doble)
+            if doble>0:
+                bien=True
+                data=contoler.getOrder("",True)
+                if data!=False:
+                    for a in data["data"]:
+                        if str(a["table"])==str(doble) and a["table_active"]==True:
+                            print("That table is occupied")
+                            bien=False
+                if bien:
+                    return str(doble)
+            else:
+                print("Input a value > 0")
+        except:
+                print("Input a int value ")
 def readNumber(txt,i):
     while True:
         doble=(input(txt+"("+i+"):"))
@@ -106,6 +125,28 @@ def questionModDel(txt):
             return False
         else:
             print("Incorrect option, ONLY CAPS")    
+def questionAddDelModQuant():
+    while True:
+        Name=(input("Do you want to ADD, REPLACE or DEL the quantity of the product?(ADD/REPLACE/DEL):"))
+        if Name=="ADD":
+            return Name
+        elif Name=="REPLACE":
+            return Name
+        elif Name=="DEL":
+            return Name
+        else:
+            print("Incorrect option, ONLY CAPS") 
+def questionAddQuant(first=True):
+    while True:
+        if first: Name=(input("Do you want to add a product to de list?(YES/NO):")) 
+        else: Name=(input("Do you want to add an other product to de list?(YES/NO):")) 
+        if Name=="YES":
+            return True
+        elif Name=="NO":
+            return False
+        else:
+            print("Incorrect option, ONLY CAPS")
+        pass
 # ========================================== Ingrediente ==========================================
 def addIngrediente():
     name=readtxt("NAME")
@@ -168,14 +209,16 @@ def showIngrediente():
             print("This ingredient dont exist")
     else:
         data = contoler.getIng("",True)
-        for a in data["data"]:
-            print(a["name"]+":")
-            print("\tID: "+str(a["id"]))
-            if (a["allergens"]):
-                print("\tAllergens: YES")
-            else:
-                print("\tAllergens: NO")
-            print("\tIs in "+str(len(a["foods"]))+" products")
+        if data!=False:
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                if (a["allergens"]):
+                    print("\tAllergens: YES")
+                else:
+                    print("\tAllergens: NO")
+                print("\tIs in "+str(len(a["foods"]))+" products")
+        print("There are no products in the DB")
 
 # ========================================== Category ==========================================
 def showCategory():
@@ -197,11 +240,12 @@ def showCategory():
             print("This category dont exist")
     else:
         data = contoler.getCat("",True)
-        print(data)
-        for a in data["data"]:
-            print(a["name"]+":")
-            print("\tID: "+str(a["id"]))
-            print("\tHas "+str(len(a["foods"]))+" foods")
+        if data!=False:
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                print("\tHas "+str(len(a["foods"]))+" foods")
+        print("There are no category in the DB")
 
 
 def addCategory():
@@ -219,13 +263,13 @@ def modCategory():
             contoler.modCategory(id,name)
             print("The Category has been modified correctly")
     else:
-        print("This ingredient dont exist")
+        print("This category dont exist")
         
 def delCategory():
     id=readNumber("ID","int")
     if contoler.getCat(id,False):
         contoler.delCategory(id)
-        print("The ingredient has been removed successfully")
+        print("The category has been removed successfully")
 
     else:
         print("This category dont exist")
@@ -253,16 +297,19 @@ def showFood():
             print("This ingredient dont exist")
     else:
         data = contoler.getFood("",True)
-        for a in data["data"]:
-            print(a["name"]+":")
-            print("\tID: "+str(a["id"]))
-            print("\tPrecio: "+str(a["price"])+"€")
-            print("\tCategory: "+a["category"]["name"])
-            print("\tDescripcion: "+str(a["description"]))
-            if len(a["ingridients"])==0:
-                print("\tThis product dont have ingredients")
-            else:
-                print("\tThis product have "+str(len(a["ingridients"]))+"ingredients")
+        if data!=False:
+            for a in data["data"]:
+                print(a["name"]+":")
+                print("\tID: "+str(a["id"]))
+                print("\tPrecio: "+str(a["price"])+"€")
+                print("\tCategory: "+a["category"]["name"])
+                print("\tDescripcion: "+str(a["description"]))
+                if len(a["ingridients"])==0:
+                    print("\tThis product dont have ingredients")
+                else:
+                    print("\tThis product have "+str(len(a["ingridients"]))+"ingredients")
+        print("There are no products in the DB")
+
 def addFood():
     name=readtxt("NAME")
     price=readNumber("Price","Double")
@@ -306,8 +353,8 @@ def modFood():
             a=True
         else:
             a=False
-            for a in data["data"][0]["ingridients"]:
-                ingredients.append(a)
+            for ingr in data["data"][0]["ingridients"]:
+                ingredients.append(ingr)
         ingNum=len(ingredients)
         category=""
         if questionMod("name"):
@@ -342,43 +389,194 @@ def modFood():
         if name=="" and precio=="" and description=="" and category=="" and len(ingredients)>ingNum:
             print("Why")
         elif contoler.modFood(id,name,precio,description,ingredients,category):
-            print("The ingredient has been modified correctly")
+            print("The Product has been modified correctly")
         else:
             print("There has been an unexpected error")
     else:
-        print("This ingredient dont exist")
+        print("This Product dont exist")
 
 def delFood():
     id=readNumber("ID","int")
     if contoler.getFood(id,False):
         contoler.delFood(id)
-        print("The ingredient has been removed successfully")
+        print("The Product has been removed successfully")
 
     else:
-        print("This category dont exist")
+        print("This Product dont exist")
+
+# ========================================== Order ==========================================
+#table int
+#customer char
+#waiter char
+#total only show
+#description a pelo
+#order_active boolean
+#table_active boolean
+#quantiti lista
+#state PE-PO
+#date SET DATETIME EN EL PAGO
+def showOrder():
+    if questionShow("order"):
+        id=readNumber("ID","int")
+        if contoler.getOrder(id,False):
+            data = contoler.getOrder(id,True)
+            for a in data["data"]:
+                if a["state"]=="PE":
+                    print("Table: "+str(a["table"])+" payable")
+                else:
+                    print("Table: "+str(a["table"])+" paid")
+                print("\tID: "+str(a["id"]))
+                print("\tCustomer name:"+a["customer"])
+                print("\tWaiter name:"+a["waiter"])
+                print("\tTotal actual: "+str(a["total"])+"€")
+                print("\tDescripcion: "+str(a["description"]))
+                if len(a["quantiti"])==0:
+                    print("\tThis order dont have ordered products")
+                else:
+                    print("\tOrders:")
+                    for b in a["quantiti"]:
+                        dataFood=contoler.getQuantiti(str(b),True)
+                        print("\t "+str(dataFood["data"][0]["quantiti"])+" x "+dataFood["data"][0]["foods"][1])
+        else:
+            print("This Order dont exist")
+    else:
+        data = contoler.getOrder("",True)
+        if data!=False:
+            for a in data["data"]:
+                    if a["state"]=="PE":
+                        print("Table: "+str(a["table"])+" payable")
+                    else:
+                        print("Table: "+str(a["table"])+" paid")
+                    print("\tID: "+str(a["id"]))
+                    print("\tCustomer name:"+a["customer"])
+                    print("\tWaiter name:"+a["waiter"])
+                    print("\tTotal actual: "+str(a["total"])+"€")
+                    print("\tDescripcion: "+str(a["description"]))
+                    if len(a["quantiti"])==0:
+                        print("\tThis order dont have ordered products")
+                    else:
+                        print("\tThis product has "+str(len(a["quantiti"]))+" products ordered")
+        else:
+            print("There are no orders in the DB")
+def addOrder():
+    table=readTable()
+    customer=readtxt("customer name")
+    waiter=readtxt("waiter name")
+    description=input("Description:")
+    quantiti={}
+    if questionAddQuant():
+        while True:
+            while True:
+                idFood=readNumber("product","int")
+                if idFood in quantiti or contoler.getFood(idFood,False):
+                    break
+                else:
+                    print("This product dont exist")
+            if idFood in quantiti:
+                res=questionAddDelModQuant()
+                if res=="ADD":
+                    quant=readNumber("quantity","int")
+                    quantiti[idFood]=str(int(quantiti[idFood])+int(quant))
+                elif res=="REPLACE":
+                    quant=readNumber("quantity","int")
+                    quantiti[idFood]=quant
+                else:
+                    quantiti.pop(idFood)
+            else:
+                quant=readNumber("quantity","int")
+                quantiti[idFood]=quant
+            if not questionAddQuant(False):
+                break
+    if contoler.addOrder(table,customer,waiter,description,quantiti):
+        print("The Order has been added successfully")
+    else:
+        print("There has been an unexpected error or the food already exists")
+def modOrder():
+    id=readNumber("ID","int")
+    if contoler.getOrder(id,False):
+        data=contoler.getOrder(id,True)
+        if data["data"][0]["state"]=="PE":
+            customer=""
+            waiter=""
+            description=""
+            quantiti={}
+            if questionMod("customer"):
+                customer=readBoolean("customer")
+            if questionMod("waiter"):
+                waiter=readBoolean("waiter")
+            if questionMod("the description"):
+                description=input("Description:")
+            if questionMod("the products list"):
+                quantitiboolean=True
+                if len(data["data"][0]["quantiti"])==0:
+                    a=True
+                else:
+                    a=False
+                    for quantityid in data["data"][0]["quantiti"]:
+                        dataquan=contoler.getQuantiti(quantityid,True)
+                        quantiti[dataquan["data"][0]["foods"][0]]=dataquan["data"][0]["quantiti"]
+                while True:
+                    while True:
+                        idFood=readNumber("product","int")
+                        if idFood in quantiti or contoler.getFood(idFood,False):
+                            break
+                        else:
+                            print("This product dont exist")
+                    if idFood in quantiti:
+                        res=questionAddDelModQuant()
+                        if res=="ADD":
+                            quant=readNumber("quantity","int")
+                            quantiti[idFood]=str(int(quantiti[idFood])+int(quant))
+                        elif res=="REPLACE":
+                            quant=readNumber("quantity","int")
+                            quantiti[idFood]=quant
+                        else:
+                            quantiti[idFood]="DEL"
+                    else:
+                        quant=readNumber("quantity","int")
+                        quantiti[idFood]=quant
+                    if not questionAddQuant(False):
+                        break
+            else:
+                quantitiboolean=False
+            if customer=="" and waiter=="" and description=="" and quantitiboolean==False:
+                print("Why")
+            elif contoler.modOrder(id,customer,waiter,description,quantiti):
+                print("The Order has been modified correctly")
+            else:
+                print("There has been an unexpected error")
+        else:
+            print("Paid orders cannot be modified")
+    else:
+        print("This Order dont exist")
+def delOrder():
+    id=readNumber("ID","int")
+    if contoler.getOrder(id,False):
+        contoler.delOrder(id)
+        print("The Order has been removed successfully")
+
+    else:
+        print("This Order dont exist")
+def payOrder():
+    id=readNumber("ID","int")
+    if contoler.getOrder(id,False):
+        data=contoler.getOrder(id,True)
+        if data["data"][0]["table_active"]:
+            contoler.payOrder(id)
+            print("The order has been paid successfully")
+        else:
+            print("The order has already been paid")
+    else:
+        print("This Order dont exist")
 # ========================================== Menu ==========================================
 contoler=menuControler.MenuCtrl()
 while(True):
-    print("========= Menu =========")
-    print("1.- Add Ingredient")
-    print("2.- Mod/Del Ingredients")
-    print("3.- Show Ingredient/s")
-    print("")
-    print("4.- Add Category")
-    print("5.- Mod/Del Category") #(Al borrar la categoria los productos la pierde. No se borran los productos y lo pierden automaticamente)
-    print("6.- Show Category/s")
-    print("")
-    print("7.- Add Product")
-    print("8.- Mod/Del Product")
-    print("9.- Show Product/s")
-    print("")
-    print("10.- Add Order")
-    print("11.- Mod/Del Order")
-    print("12.- Show Order/s")
-    print("")
-    print("13.- Pay Order ")
-    print("14.- Exit")
-    option=int(input("chose an option:"))
+    print("==================================================================== Menu ====================================================================")
+    print("1.- Add Ingredient\t|\t4.- Add Category\t|\t7.- Add Product\t\t|\t10.- Add Order\t\t|\t13.- Pay Order")
+    print("2.- Mod/Del Ingredients\t|\t5.- Mod/Del Category\t|\t8.- Mod/Del Product\t|\t11.- Mod/Del Order\t|\t14.- Exit")
+    print("3.- Show Ingredient/s\t|\t6.- Show Category/s\t|\t9.- Show Product/s\t|\t12.- Show Order/s")
+    print("==============================================================================================================================================")
+    option=int(input("Chose an option:"))
     if option==1:
         addIngrediente()
     elif option==2:
@@ -411,13 +609,16 @@ while(True):
     elif option==9:
         showFood()
     elif option==10:
-        pass
+        addOrder()
     elif option==11:
-        pass
+        if questionModDel("Order"):
+            modOrder()
+        else:
+            delOrder()
     elif option==12:
-        pass
+        showOrder()
     elif option==13:
-        pass
+        payOrder()
     elif option==14:
         print("Today "+contoler.getSaldo()+"€ has been obtained")
         break
