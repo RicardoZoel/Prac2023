@@ -171,7 +171,7 @@ def modIngrediente():
             description=input("Description:")
         if name=="" and allergens=="" and description=="":
             print("Why")
-        elif contoler.modIngrediente(name,allergens,description):
+        elif contoler.modIngrediente(id,name,allergens,description):
             print("The ingredient has been modified correctly")
         else:
             print("There has been an unexpected error")
@@ -198,6 +198,7 @@ def showIngrediente():
                     print("\tAllergens: YES")
                 else:
                     print("\tAllergens: NO")
+                print("\tDescription:"+str(a["description"]))
                 if len(a["foods"])==0:
                     print("\tIs in "+str(len(a["foods"]))+" products")
                 else:
@@ -217,8 +218,10 @@ def showIngrediente():
                     print("\tAllergens: YES")
                 else:
                     print("\tAllergens: NO")
+                print("\tDescription:"+str(a["description"]))
                 print("\tIs in "+str(len(a["foods"]))+" products")
-        print("There are no products in the DB")
+        else:
+            print("There are no ingredients in the DB")
 
 # ========================================== Category ==========================================
 def showCategory():
@@ -234,7 +237,7 @@ def showCategory():
                 else:
                     print("\tProducts:")
                     for b in a["foods"]:
-                        dataFood=contoler.getFood(b,True)
+                        dataFood=contoler.getFood(str(b),True)
                         print("\t - "+dataFood["data"][0]["name"])
         else:
             print("This category dont exist")
@@ -245,7 +248,8 @@ def showCategory():
                 print(a["name"]+":")
                 print("\tID: "+str(a["id"]))
                 print("\tHas "+str(len(a["foods"]))+" foods")
-        print("There are no category in the DB")
+        else:
+            print("There are no category in the DB")
 
 
 def addCategory():
@@ -257,7 +261,7 @@ def addCategory():
 
 def modCategory():
     id=readNumber("ID","int")
-    if contoler.getIng(id,False):
+    if contoler.getCat(id,False):
         if questionMod("name"):
             name=readtxt("NAME")
             contoler.modCategory(id,name)
@@ -284,7 +288,10 @@ def showFood():
                 print(a["name"]+":")
                 print("\tID: "+str(a["id"]))
                 print("\tPrecio: "+str(a["price"])+"€")
-                print("\tCategory: "+a["category"][1])
+                if a["category"]==False:
+                    print("\tThey dont have category")
+                else:
+                    print("\tCategory: "+a["category"][1])
                 print("\tDescripcion: "+str(a["description"]))
                 if len(a["ingridients"])==0:
                     print("\tThis product dont have ingredients")
@@ -302,13 +309,17 @@ def showFood():
                 print(a["name"]+":")
                 print("\tID: "+str(a["id"]))
                 print("\tPrecio: "+str(a["price"])+"€")
-                print("\tCategory: "+a["category"]["name"])
+                if a["category"]==False:
+                    print("\tThey dont have category")
+                else:
+                    print("\tCategory: "+a["category"][1])
                 print("\tDescripcion: "+str(a["description"]))
                 if len(a["ingridients"])==0:
                     print("\tThis product dont have ingredients")
                 else:
                     print("\tThis product have "+str(len(a["ingridients"]))+"ingredients")
-        print("There are no products in the DB")
+        else:
+            print("There are no products in the DB")
 
 def addFood():
     name=readtxt("NAME")
@@ -360,7 +371,7 @@ def modFood():
         if questionMod("name"):
             name=readtxt("NAME")
         if questionMod("precio"):
-            precio=readBoolean("precio")
+            precio=readNumber("precio","Double")
         if questionMod("the description"):
             description=input("Description:")
         if questionAddIng(a):
@@ -375,7 +386,7 @@ def modFood():
                             break
                 else:
                     print("This ingredient dont exist")
-        if len(data["data"][0]["category"])==False:
+        if data["data"][0]["category"]==False:
             a=True
         else:
             a=False
@@ -501,9 +512,9 @@ def modOrder():
             description=""
             quantiti={}
             if questionMod("customer"):
-                customer=readBoolean("customer")
+                customer=readtxt("customer")
             if questionMod("waiter"):
-                waiter=readBoolean("waiter")
+                waiter=readtxt("waiter")
             if questionMod("the description"):
                 description=input("Description:")
             if questionMod("the products list"):
@@ -513,7 +524,7 @@ def modOrder():
                 else:
                     a=False
                     for quantityid in data["data"][0]["quantiti"]:
-                        dataquan=contoler.getQuantiti(quantityid,True)
+                        dataquan=contoler.getQuantiti(str(quantityid),True)
                         quantiti[dataquan["data"][0]["foods"][0]]=dataquan["data"][0]["quantiti"]
                 while True:
                     while True:

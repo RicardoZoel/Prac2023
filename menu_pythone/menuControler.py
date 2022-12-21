@@ -169,16 +169,17 @@ class MenuCtrl():
                         self.delQuantiti(self.exist(id,a,True))
                     else:
                         idq=self.exist(id,a,True)
-                        listaq.append(self.modQuantiti(id,idq,quantiti[a]))
+                        listaq.append(self.modQuantiti(str(idq),quantiti[a]))
                 else:
-                    listaq.append(self.addQantiti(id,a,quantiti[a]))
-                pd=self.getFood(a,True)
+                    listaq.append(self.addQantiti(id,str(a),quantiti[a]))
+                pd=self.getFood(str(a),True)
                 total+=(float(pd["data"][0]["price"])*int(quantiti[a]))
             payload["quantiti"]=listaq
             payload["total"]=total
 
         response = requests.put(url,json=payload)
         data=response.json()
+        print(data)
         if data["result"]["status"]!=200:
             return False
         else:
@@ -304,7 +305,7 @@ class MenuCtrl():
     def exist(self,idorder,idfood,returne=False):
         data = self.getOrder(idorder,True)
         for a in data["data"][0]["quantiti"]:
-            data2=self.getQuantiti(a,True)
+            data2=self.getQuantiti(str(a),True)
             if data2["data"][0]["foods"][0]==idfood:
                 if returne:
                     return data2["data"][0]["id"]
@@ -319,8 +320,8 @@ class MenuCtrl():
     def payOrder(self,id):
         url = "http://localhost:8069/menu_app/updateOrder/"+id
         payload = {
-            "order_active":"order_active",
-            "table_active":"table_active",
+            "order_active":False,
+            "table_active":False,
             "state":"PO"
         }
         response = requests.put(url,json=payload)
