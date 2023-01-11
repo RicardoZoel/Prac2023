@@ -6,3 +6,4 @@ class QuantitiModel(models.Model):
     quantiti = fields.Integer(string="Quantiti of product", required=True, default=1)
     foods = fields.Many2one("menu_app.foods_model", required=True, string="Foods")
     orders = fields.Many2one("menu_app.orders_model")
+    invoice = fields.Many2one("menu_app.invoice_model")

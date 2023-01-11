@@ -29,6 +29,7 @@
         'views/foods_views.xml',
         'views/ingridients_views.xml',
         'views/category_views.xml',
+        'views/invoice_views.xml',
         'views/menu.xml',
     ],
     # only loaded in demonstration mode

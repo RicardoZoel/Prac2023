@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+      <record model="ir.ui.view" id="menu_app.invoice_model_form">
+        <field name="name">Invoice Form</field>
+        <field name="model">menu_app.invoice_model</field>
+        <field name="arch" type="xml">
+          <form string="Invoice">
+            <header>
+                <button name="finalizar" type="object" string="Confirmar" class="oe_highlight" attrs="{'invisible': [('state','=', 'CO')]}" state="DR"/>
+                <field name="state" widget="statusbar"></field>
+            </header>
+            <sheet>
+              <group name="top">
+                  <field name="ref"/>    
+                  <field name="date"/>  
+                  <field name="base"/>  
+                  <field name="vat"/>    
+                  <field name="total"/>
+                  <field name="client"/>
+              </group>
+              <group name="bottom">
+                <field name="lines">
+                <tree>
+                  <field name="quantiti"/>
+                  <field name="foods"/>
+                </tree>
+                <form>
+                  <field name="quantiti"/>
+                  <field name="foods"/>
+                </form>
+                  </field>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+      <!-- explicit list view definition -->
+      <record model="ir.ui.view" id="menu_app.invoice_list">
+        <field name="name">Invoice list</field>
+        <field name="model">menu_app.invoice_model</field>
+        <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+          </tree>
+        </field>
+      </record>
+  
+      <!-- actions opening views on models -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_invoice">
+        <field name="name">Invoice window</field>
+        <field name="res_model">menu_app.invoice_model</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+  
+      <!-- server action to the one above -->
+  <!--
+      <record model="ir.actions.server" id="menu_app.action_server">
+        <field name="name">menu_app server</field>
+        <field name="model_id" ref="model_menu_app_menu_app"/>
+        <field name="state">code</field>
+        <field name="code">
+          action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "tree,form",
+            "res_model": model._name,
+          }
+        </field>
+      </record>
+  -->
+  
+      
+    </data>
+  </odoo>

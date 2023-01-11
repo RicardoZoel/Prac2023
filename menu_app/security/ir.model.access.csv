@@ -4,3 +4,4 @@ access_menu_app_ingridients_model,menu_app.ingridients_model,model_menu_app_ingr
 access_menu_app_category_model,menu_app.category_model,model_menu_app_category_model,base.group_user,1,1,1,1
 access_menu_app_quantiti_model,menu_app.quantiti_model,model_menu_app_quantiti_model,base.group_user,1,1,1,1
 access_menu_app_orders_model,menu_app.orders_model,model_menu_app_orders_model,base.group_user,1,1,1,1
+access_menu_app_invoice_model,menu_app.invoice_model,model_menu_app_invoice_model,base.group_user,1,1,1,1

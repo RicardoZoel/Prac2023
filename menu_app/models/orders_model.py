@@ -16,6 +16,10 @@ class OrdersModel(models.Model):
     table_active=fields.Boolean(default=True, readonly=True)
     quantiti=fields.One2many("menu_app.quantiti_model","orders",string="Products")
     state = fields.Selection(string="Status",selection=[('PE','Pending'),('PO','paid out')], default="PE")
+    #Cambiar los estados entre: 
+    #   - Activo: mesa en uso y pidiendo 
+    #   - Pendiente: mesa finalizada y pendiente de facturación 
+    #   - Finalizada: mesa finalizada y se han facturado todos los pagos
     date = fields.Datetime(string="Date finish",help="Date finish",readonly=True)
 
     def finalizar(self):
