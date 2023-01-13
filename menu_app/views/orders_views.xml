@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
           <form string="Orders">
             <header>
-                <button name="finalizar" type="object" string="Pagado" class="oe_highlight" attrs="{'readonly': [('order_active','=', 'False')]}" states="PE"/>
+                <button name="finalizar" type="object" string="Pagado" class="oe_highlight" attrs="{'readonly': [('order_active','=', 'False')]}" states="AC"/>
                 <field name="state" widget="statusbar"></field>
             </header>
             <sheet>

@@ -14,6 +14,6 @@ class CategoryModel(models.Model):
     def _computeCoplete_name(self):
         for category in self:
             if category.parent_id:
-                category.complete_name= "%s / %s" % (category.parent_id.complete_name, category.name)
+                category.complete_name= '%s / %s' % (category.parent_id.complete_name, category.name)
             else:
                 category.complete_name=category.name

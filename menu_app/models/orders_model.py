@@ -8,6 +8,7 @@ class OrdersModel(models.Model):
     table = fields.Integer(string="Table", required=True, index=True)
     customer = fields.Char(string="Client", required=True)
     """waiter=camarero"""
+    
     waiter = fields.Char(string="Waiter", required=True)
     currency_id=fields.Many2one("res.currency", string="Currency", default=lambda self:self.env.user.company_id.currency_id)
     total = fields.Monetary(string="Price", readonly=True, default=0)
@@ -15,7 +16,7 @@ class OrdersModel(models.Model):
     order_active=fields.Boolean(default=True, readonly=True)
     table_active=fields.Boolean(default=True, readonly=True)
     quantiti=fields.One2many("menu_app.quantiti_model","orders",string="Products")
-    state = fields.Selection(string="Status",selection=[('PE','Pending'),('PO','paid out')], default="PE")
+    state = fields.Selection(string="Status",selection=[('AC','Active'),('PE','Pending'),('FI','finish')], default="ACS")
     #Cambiar los estados entre: 
     #   - Activo: mesa en uso y pidiendo 
     #   - Pendiente: mesa finalizada y pendiente de facturación 
@@ -26,8 +27,8 @@ class OrdersModel(models.Model):
         self.ensure_one()
         self.order_active = False
         self.table_active = False
-        if self.state == "PE":
-               self.state = "PO"
+        if self.state == "AC":
+               self.state = "PE"
                self.date=datetime.now()
         return True
 
