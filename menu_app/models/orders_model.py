@@ -16,11 +16,11 @@ class OrdersModel(models.Model):
     order_active=fields.Boolean(default=True, readonly=True)
     table_active=fields.Boolean(default=True, readonly=True)
     quantiti=fields.One2many("menu_app.quantiti_model","orders",string="Products")
-    state = fields.Selection(string="Status",selection=[('AC','Active'),('PE','Pending'),('FI','finish')], default="ACS")
+    state = fields.Selection(string="Status",selection=[('AC','Active'),('PE','Pending'),('FI','finish')], default="AC")
     #Cambiar los estados entre: 
-    #   - Activo: mesa en uso y pidiendo 
-    #   - Pendiente: mesa finalizada y pendiente de facturación 
-    #   - Finalizada: mesa finalizada y se han facturado todos los pagos
+    #   - Activo: mesa en uso y pidiendo / danger verde
+    #   - Pendiente: mesa finalizada y pendiente de facturación / danger amarillo
+    #   - Finalizada: mesa finalizada y se han facturado todos los pagos / danger gris
     date = fields.Datetime(string="Date finish",help="Date finish",readonly=True)
 
     def finalizar(self):
@@ -30,6 +30,11 @@ class OrdersModel(models.Model):
         if self.state == "AC":
                self.state = "PE"
                self.date=datetime.now()
+        invoice = {
+                'client': self.customer,
+                'lines': self.quantiti,
+            }
+        self.env['menu_app.invoice_model'].create(invoice)
         return True
 
     @api.onchange("quantiti")

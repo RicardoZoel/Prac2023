@@ -6,7 +6,7 @@ class CategoryModel(models.Model):
 
     name = fields.Char(string="Category Name", required=True)
     complete_name=fields.Char('Complete name', compute="_computeCoplete_name",recursive=True,store=True)
-    foods = fields.One2many("menu_app.foods_model", inverse_name="category",string="Foods")
+    foods = fields.Many2many("menu_app.foods_model",relation="menu_app_category_model2foods_model",string="Foods")
     parent_id=fields.Many2one("menu_app.category_model",string="Parent Category", index=True, ondelete="cascade")
     #child_id=fields.One2many("menu_app.category_model", "parent_id", string="Childs category")
 

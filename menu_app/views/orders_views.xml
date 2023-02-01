@@ -31,8 +31,10 @@
                     <field name="foods"/>
                   </tree>
                   <form>
+                    <group>
                     <field name="quantiti"/>
                     <field name="foods"/>
+                    </group>
                   </form>
                 </field>
               </group>
@@ -45,12 +47,12 @@
         <field name="name">Orders list</field>
         <field name="model">menu_app.orders_model</field>
         <field name="arch" type="xml">
-          <tree  decoration-danger="order_active == False" decoration-success="order_active == True">
+          <tree  decoration-warning="state == 'PE'" decoration-success="state == 'AC'" decoration-muted="state == 'FI'">
             <field name="table"/> 
             <field name="waiter"/>  
             <field name="customer"/>    
             <field name="total"/>               
-            <field name="order_active" invisible="True"/>   
+            <field name="state" invisible="True"/>   
           </tree>
         </field>
       </record>

@@ -432,10 +432,12 @@ def showOrder():
         if contoler.getOrder(id,False):
             data = contoler.getOrder(id,True)
             for a in data["data"]:
-                if a["state"]=="PE":
-                    print("Table: "+str(a["table"])+" payable")
+                if a["state"]=="AC":
+                    print("Table: "+str(a["table"])+" Active")
+                elif a["state"]=="PE":
+                    print("Table: "+str(a["table"])+" Pending")
                 else:
-                    print("Table: "+str(a["table"])+" paid")
+                    print("Table: "+str(a["table"])+" Paid")
                 print("\tID: "+str(a["id"]))
                 print("\tCustomer name:"+a["customer"])
                 print("\tWaiter name:"+a["waiter"])
@@ -454,19 +456,21 @@ def showOrder():
         data = contoler.getOrder("",True)
         if data!=False:
             for a in data["data"]:
-                    if a["state"]=="PE":
-                        print("Table: "+str(a["table"])+" payable")
-                    else:
-                        print("Table: "+str(a["table"])+" paid")
-                    print("\tID: "+str(a["id"]))
-                    print("\tCustomer name:"+a["customer"])
-                    print("\tWaiter name:"+a["waiter"])
-                    print("\tTotal actual: "+str(a["total"])+"€")
-                    print("\tDescripcion: "+str(a["description"]))
-                    if len(a["quantiti"])==0:
-                        print("\tThis order dont have ordered products")
-                    else:
-                        print("\tThis product has "+str(len(a["quantiti"]))+" products ordered")
+                if a["state"]=="AC":
+                    print("Table: "+str(a["table"])+" Active")
+                elif a["state"]=="PE":
+                    print("Table: "+str(a["table"])+" Pending")
+                else:
+                    print("Table: "+str(a["table"])+" Paid")
+                print("\tID: "+str(a["id"]))
+                print("\tCustomer name:"+a["customer"])
+                print("\tWaiter name:"+a["waiter"])
+                print("\tTotal actual: "+str(a["total"])+"€")
+                print("\tDescripcion: "+str(a["description"]))
+                if len(a["quantiti"])==0:
+                    print("\tThis order dont have ordered products")
+                else:
+                    print("\tThis product has "+str(len(a["quantiti"]))+" products ordered")
         else:
             print("There are no orders in the DB")
 def addOrder():
@@ -506,7 +510,7 @@ def modOrder():
     id=readNumber("ID","int")
     if contoler.getOrder(id,False):
         data=contoler.getOrder(id,True)
-        if data["data"][0]["state"]=="PE":
+        if data["data"][0]["state"]=="AC":
             customer=""
             waiter=""
             description=""

@@ -24,6 +24,7 @@
 
     # always loaded
     'data': [
+        'security/menu_security.xml',
         'security/ir.model.access.csv',
         'views/orders_views.xml',
         'views/foods_views.xml',
@@ -31,6 +32,8 @@
         'views/category_views.xml',
         'views/invoice_views.xml',
         'views/menu.xml',
+        'report/report_invoice.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

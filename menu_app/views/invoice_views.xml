@@ -6,28 +6,31 @@
         <field name="arch" type="xml">
           <form string="Invoice">
             <header>
-                <button name="finalizar" type="object" string="Confirmar" class="oe_highlight" attrs="{'invisible': [('state','=', 'CO')]}" state="DR"/>
+                <button name="finalizar" type="object" string="Confirmar" class="oe_highlight" attrs="{'invisible': [('state','=', 'CO')]}"/>
+                <!-- <button name="print_report" type="object" string="Print" class="oe_highlight" attrs="{'invisible': [('state','=', 'DR')]}"/>-->
                 <field name="state" widget="statusbar"></field>
             </header>
             <sheet>
               <group name="top">
-                  <field name="ref"/>    
+                  <field name="ref" />    
                   <field name="date"/>  
                   <field name="base" force_save="True"/>  
-                  <field name="vat"/>    
+                  <field name="vat" attrs="{'readonly': [('state','=', 'CO')]}" force_save="True"/>    
                   <field name="total" force_save="True"/>
-                  <field name="client"/>
+                  <field name="client" attrs="{'readonly': [('state','=', 'CO')]}" force_save="True"/>
               </group>
               <group name="bottom">
-                <field name="lines">
+                <field name="lines" attrs="{'readonly': [('state','=', 'CO')]}">
                 <tree>
                   <field name="quantiti"/>
                   <field name="foods"/>
                   <field name="ubicacion"/>
                 </tree>
                 <form>
-                  <field name="quantiti"/>
-                  <field name="foods"/>
+                  <group>
+                    <field name="quantiti"/>
+                    <field name="foods"/>
+                  </group>
                 </form>
                   </field>
               </group>

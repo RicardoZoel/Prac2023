@@ -318,15 +318,10 @@ class MenuCtrl():
             self.delQuantiti(i)
 
     def payOrder(self,id):
-        url = "http://localhost:8069/menu_app/updateOrder/"+id
-        payload = {
-            "order_active":False,
-            "table_active":False,
-            "state":"PO"
-        }
-        response = requests.put(url,json=payload)
+        url = "http://localhost:8069/menu_app/metodeOrder/"+id+"/finalizar"
+        response = requests.get(url)
         data=response.json()
-        if data["result"]["status"]!=200:
+        if data["status"]!=200:
             return False
         else:
             data = self.getOrder(id,True)

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="report_invoice" model="ir.actions.report">
+        <field name="name">Invoice</field>
+        <field name="model">menu_app.invoice_model</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">menu_app.report_invoice</field>
+        <field name="report_file">
+            menu_app.report_invoice</field>
+        <field name="binding_model_id" ref="model_menu_app_invoice_model" />
+        <field name="binding_type">report</field>
+    </record>
+
+
+    <template id="report_invoice">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                
+                <t t-foreach="docs" t-as="doc">
+                    <h2>Invoice <t t-esc="doc.ref" /></h2> 
+                        Client: <t t-esc="doc.client" /><br />
+                        Date: <t t-esc="doc.date" /><br /> 
+                        Base: <t t-esc="doc.base" /><br /> 
+                        Vat: <t t-esc="doc.vat" /><br /> 
+                        Total: <t t-esc="doc.total" /><br /> 
+                        <br />
+                        <style type="text/css">
+                          .styled-table {
+                          border-collapse: collapse;
+                          margin: 25px 0;
+                          font-size: 0.9em;
+                          font-family: sans-serif;
+                          min-width: 400px;
+                          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                        }
+                        .styled-table thead tr {
+                          background-color: #121414;
+                          color: #ffffff;
+                          text-align: left;
+                      }.styled-table th,
+                      .styled-table td {
+                          padding: 12px 15px;
+                      }.styled-table tbody tr {
+                        border-bottom: 1px solid #dddddd;
+                    }
+                    
+                    .styled-table tbody tr:nth-of-type(even) {
+                        background-color: #f3f3f3;
+                    }
+                    
+                    .styled-table tbody tr:last-of-type {
+                        border-bottom: 2px solid #121414;
+                    }
+                        </style>
+                        <h4>Lines:</h4>
+                        <table class="styled-table">
+                          <thead>
+                              <tr>
+                                  <th>Quantity</th>
+                                  <th>Product</th>
+                                  <th>Location</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            <t t-foreach="doc.lines" t-as="line">
+                              <tr>
+                                  <td><t t-esc="line.quantiti" />x</td>
+                                  <td><t t-esc="line.foods.name" /></td>
+                                  <td><t t-esc="line.ubicacion" /></td>
+                              </tr>
+                            </t> 
+                          </tbody>
+                      </table>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -3,11 +3,12 @@ from odoo import models, fields, api
 class InvoiceModel(models.Model):
     _name = 'menu_app.invoice_model'
     _description = 'Invoice Model'
+    _rec_name='ref'
 
     ref=fields.Integer(string="REF",readonly=True, default=lambda self: self._computeRef(), index=True)
     date=fields.Datetime(string="Date",readonly=True, default=datetime.now())
-    base=fields.Float(string="Base", readonly=True)
-    vat=fields.Selection(string="VAT",selection=[("0",'0'),("21",'21')], default="21")
+    base=fields.Float(string="Base", compute="chageTotal",readonly=True)
+    vat=fields.Selection(string="VAT",selection=[("0",'0'),("4",'4'),("10",'10'),("21",'21')], default="10")
     total=fields.Float(string="Total",readonly=True)
     lines=fields.One2many("menu_app.quantiti_model","invoice",string="Lines")
     client= fields.Char(string="Client:", required=True)
@@ -19,14 +20,22 @@ class InvoiceModel(models.Model):
         else:
             return (self.env["menu_app.invoice_model"].search([])[-1].id + 1)
 
-    @api.onchange("vat","base","lines")
+    @api.depends("vat","base","lines")
     def chageTotal(self):
-        self.base=0
-        for line in self.lines:
-            self.base+=(line.foods.price*line.quantiti)
-        self.total=self.base+(self.base/100*int(self.vat))
+        for aa in self:
+            aa.base=0
+            for line in aa.lines:
+                aa.base+=(line.foods.price*line.quantiti)
+            aa.total=aa.base+(aa.base/100*int(aa.vat))
 
     def finalizar(self):
         self.ensure_one()
         self.state = "CO"
+        for line in self.lines:
+            if line.orders.state=="PE":
+                line.orders.state=="FI"
         return True
+
+    def print_report(self):
+        return self.env.ref('menu_app.report_invoice').report_action(self)
+    

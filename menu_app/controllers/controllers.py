@@ -52,6 +52,9 @@ class MenuApp(http.Controller):
         else:
             domain=[]
         orderdata = http.request.env["menu_app.orders_model"].sudo().search_read(domain,["table","table_active","customer","waiter","total","description","quantiti","state","date"])
+        for rec in orderdata:
+            if rec["date"]!=False:
+                rec["date"]=rec["date"].isoformat()
         data={  "status":200,
                 "data":orderdata}
         return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
@@ -67,6 +70,8 @@ class MenuApp(http.Controller):
         data={  "status":200,
                 "data":quantitidata}
         return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
+
+
 # ================================== Post ==================================
     
     @http.route('/menu_app/addCategory', auth='public', type='json', method="POST")
@@ -274,7 +279,21 @@ class MenuApp(http.Controller):
             data = { "status": 404,
                     "error": e}
             return data
-# ==================================
+
+
+# ================================== METODO ==================================
+    @http.route('/menu_app/metodeOrder/<int:orderid>/<string:metName>', auth='public', type='http')
+    def metodOrder(self, orderid,metName, **kw):
+        try:
+            result = http.request.env["menu_app.orders_model"].sudo().search([("id", "=", orderid)])
+            if metName=="finalizar":
+                result.finalizar()
+            data = { "status": 200}
+            return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
+        except Exception as e:
+            data = { "status": 404,
+                    "error": e}
+            return http.Response(json.dumps(data).encode("utf8"),mimetype="application/json")
 # class MenuApp(http.Controller):
 #     @http.route('/menu_app/menu_app/', auth='public')
 #     def index(self, **kw):
