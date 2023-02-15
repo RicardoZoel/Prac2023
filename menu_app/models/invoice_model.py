@@ -1,5 +1,7 @@
 from datetime import datetime
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+
 class InvoiceModel(models.Model):
     _name = 'menu_app.invoice_model'
     _description = 'Invoice Model'
@@ -30,6 +32,9 @@ class InvoiceModel(models.Model):
 
     def finalizar(self):
         self.ensure_one()
+        for a in self.lines:
+            if a.state!="FI":
+                raise ValidationError("There are products to deliver !!!!")
         self.state = "CO"
         for line in self.lines:
             if line.orders.state=="PE":

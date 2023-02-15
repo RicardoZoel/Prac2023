@@ -43,6 +43,7 @@
               </group>
               <group name="right">
                 <field name="category"/>     
+                <field name="preparation"/>
                 <field name="currency_id" invisible="True"/>     
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="description" widget="html"/>     

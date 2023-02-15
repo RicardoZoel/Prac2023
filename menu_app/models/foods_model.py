@@ -11,3 +11,5 @@ class FoodsModel(models.Model):
     foods = fields.Many2many("menu_app.quantiti_model",relation="menu_app_foods_model2quantiti_model",readonly=True)
     image=fields.Image(string="Image of food")
     description= fields.Html(string="Description")
+    
+    preparation=fields.Selection(string="Preparation", selection=[('BR','BARRA'),('CO','COCINA')],default="CO")

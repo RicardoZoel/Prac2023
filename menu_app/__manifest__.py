@@ -31,6 +31,7 @@
         'views/ingridients_views.xml',
         'views/category_views.xml',
         'views/invoice_views.xml',
+        'views/quantiti_views.xml',
         'views/menu.xml',
         'report/report_invoice.xml',
 

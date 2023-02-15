@@ -8,6 +8,14 @@ access_menu_app_orders_model_waiter,menu_app.orders_model,model_menu_app_orders_
 access_menu_app_invoice_model_waiter,menu_app.invoice_model,model_menu_app_invoice_model,group_waiter,1,1,1,0
 
 
+access_menu_app_foods_model_barman,menu_app.foods_model,model_menu_app_foods_model,group_barman,1,0,0,0
+access_menu_app_ingridients_model_barman,menu_app.ingridients_model,model_menu_app_ingridients_model,group_barman,1,0,0,0
+access_menu_app_category_model_barman,menu_app.category_model,model_menu_app_category_model,group_barman,1,0,0,0
+access_menu_app_quantiti_model_barman,menu_app.quantiti_model,model_menu_app_quantiti_model,group_barman,1,1,1,0
+access_menu_app_orders_model_barman,menu_app.orders_model,model_menu_app_orders_model,group_barman,1,1,1,1
+access_menu_app_invoice_model_barman,menu_app.invoice_model,model_menu_app_invoice_model,group_barman,1,1,1,0
+
+
 access_menu_app_foods_model_cooker,menu_app.foods_model,model_menu_app_foods_model,group_cooker,1,0,0,0
 access_menu_app_ingridients_model_cooker,menu_app.ingridients_model,model_menu_app_ingridients_model,group_cooker,1,0,0,0
 access_menu_app_category_model_cooker,menu_app.category_model,model_menu_app_category_model,group_cooker,1,0,0,0

@@ -1,0 +1,181 @@
+<odoo>
+    <data>
+      <record model="ir.ui.view" id="menu_app.quantiti_model_form">
+        <field name="name">Quantiti Form</field>
+        <field name="model">menu_app.quantiti_model</field>
+        <field name="arch" type="xml">
+          <form string="Quantiti">
+            <header>
+                <button name="ready" type="object" string="Ready" class="oe_highlight" attrs="{'invisible': [('state','!=', 'PE')]}"/>
+                <button name="ready" type="object" string="Finish" class="oe_highlight" attrs="{'invisible': [('state','!=', 'RD')]}"/>
+                <field name="state" widget="statusbar"></field>
+            </header>
+            <sheet>
+                <group name="left">
+                    <field name="quantiti" readonly="True"/> 
+                    <field name="foods" readonly="True"/>  
+                </group>
+                <group name="right">
+                    <field name="ubicacion" force_save="True"/>      
+                </group>  
+            </sheet>
+          </form>
+        </field>
+      </record>
+      <record model="ir.ui.view" id="menu_app.quantiti_search">
+        <field name="name">Filters of order lines</field>
+        <field name="model">menu_app.quantiti_model</field>
+        <field name="arch" type="xml">
+          <search>
+            <field name="quantiti"/> 
+            <field name="foods"/>  
+            <field name="ubicacion"/>            
+            <field name="state" invisible="True"/>
+            <filter string="Pending orders" name="Pending_orders" domain="[('state','=','PE')]"/>
+            <filter string="Orders placed" name="Orders_placed" domain="[('state','=','RD')]"/>
+            <filter string="Finished orders" name="Finished_orders" domain="[('state','=','FI')]"/>
+          </search>
+        </field>
+      </record>
+      <!-- explicit list view definition -->
+      <record model="ir.ui.view" id="menu_app.quantiti_list">
+        <field name="name">Quantiti list</field>
+        <field name="model">menu_app.quantiti_model</field>
+        <field name="arch" type="xml">
+          <tree decoration-warning="state == 'PE'" decoration-success="state == 'RD'">
+            <field name="quantiti"/> 
+            <field name="foods"/>  
+            <field name="ubicacion"/>            
+            <field name="state" invisible="True"/>  
+          </tree>
+        </field>
+      </record>
+  
+
+<!-- 
+      <record model="ir.ui.view" id="menu_app.quantiti_pivot">
+        <field name="name">Quantiti Pivot</field>
+        <field name="model">menu_app.quantiti_model</field>
+        <field name="arch" type="xml">
+          <pivot>
+            <field name="table" type="row"/>
+            <field name="date"/>
+            <field name="lines_ids"/>
+            <field name="base"/>
+            <field name="vat"/>
+            <field name="total" type="measure"/>
+            
+          </pivot>
+        </field>
+      </record>-->
+      <!-- <record model="ir.actions.act_window" id="task_app.action_window_catergories_2_list">
+          <field name="name">Category List 2</field>
+          <field name="res_model">task_app.category_model</field>
+          <field name="domain">[('totalSeverity', '=',  0)]</field> 
+          <field name="view_mode">tree</field>
+          <field name="view_ids" eval="[(5, 0, 0),
+              (0, 0, {'view_mode': 'tree', 'view_id': ref('task_app.category_model_list')}),
+              (0, 0, {'view_mode': 'form', 'view_id': ref('task_app.category_model_form_inherit')})]"/>
+
+      </record> -->
+      <record model="ir.ui.view" id="menu_app.quantiti_model_form_inherit_camarero" >
+        <field name="name">Quantity Form Waiter</field>
+        <field name="model">menu_app.quantiti_model</field>
+        <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form//sheet" position="before">
+            <header>
+              <button name="readyBackWaiter" type="object" string="Finish" class="oe_highlight"/>
+            </header>
+          </xpath>     
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="menu_app.quantiti_model_form_inherit_barman" >
+      <field name="name">Quantity Form Barman</field>
+      <field name="model">menu_app.quantiti_model</field>
+      <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//form//sheet" position="before">
+          <header>
+            <button name="readyBackBarman" type="object" string="Ready" class="oe_highlight"/>
+          </header>
+        </xpath>     
+      </field>
+  </record>
+
+
+
+  <record model="ir.ui.view" id="menu_app.quantiti_model_form_inherit_cocinero" >
+    <field name="name">Quantity Form Cooker</field>
+    <field name="model">menu_app.quantiti_model</field>
+    <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form//sheet" position="before">
+        <header>
+          <button name="readyBackCooker" type="object" string="Ready" class="oe_highlight"/>
+        </header>
+      </xpath>     
+    </field>
+</record>
+     <!--  actions opening views on models -->
+     <!-- GENERAL -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti">
+        <field name="name">Quantiti window</field>
+        <field name="res_model">menu_app.quantiti_model</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+
+      <!-- CAMARERO -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_camarero">
+        <field name="name">Quantiti window</field>
+        <field name="res_model">menu_app.quantiti_model</field>
+        <field name="domain">[('state', '=',  'RD')]</field> 
+        <field name="view_mode">tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('menu_app.quantiti_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('menu_app.quantiti_model_form_inherit_camarero')})]"/>
+      </record>
+
+      <!-- BARMAN -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_barman">
+        <field name="name">Quantiti window</field>
+        <field name="res_model">menu_app.quantiti_model</field>
+        <field name="domain">[('destination', '=',  'BARRA'),('state', '=',  'PE')]</field> 
+        <field name="view_mode">tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('menu_app.quantiti_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('menu_app.quantiti_model_form_inherit_barman')})]"/>
+      </record>
+
+      <!-- COCINERO -->
+      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_cocinero">
+        <field name="name">Quantiti window</field>
+        <field name="res_model">menu_app.quantiti_model</field>
+        <field name="domain">[('destination', '=',  'COCINA'),('state', '=',  'PE')]</field> 
+        <field name="view_mode">tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('menu_app.quantiti_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('menu_app.quantiti_model_form_inherit_cocinero')})]"/>
+      </record>
+  
+      <!-- server action to the one above -->
+  <!--
+      <record model="ir.actions.server" id="menu_app.action_server">
+        <field name="name">menu_app server</field>
+        <field name="model_id" ref="model_menu_app_menu_app"/>
+        <field name="state">code</field>
+        <field name="code">
+          action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "tree,form",
+            "res_model": model._name,
+          }
+        </field>
+      </record>
+  -->
+  
+      
+    </data>
+  </odoo>

@@ -7,6 +7,11 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="category_id" ref="module_menu_category"/>
     </record>
+    <record id="group_barman" model="res.groups">
+        <field name="name">Barman</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="module_menu_category"/>
+    </record>
     <record id="group_cooker" model="res.groups">
         <field name="name">Cooker</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>

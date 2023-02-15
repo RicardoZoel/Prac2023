@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 from datetime import datetime
+from odoo.exceptions import ValidationError
+
 class OrdersModel(models.Model):
     _name = 'menu_app.orders_model'
     _description = 'Orders Model'
@@ -8,8 +10,8 @@ class OrdersModel(models.Model):
     table = fields.Integer(string="Table", required=True, index=True)
     customer = fields.Char(string="Client", required=True)
     """waiter=camarero"""
-    
-    waiter = fields.Char(string="Waiter", required=True)
+    #waiter automatico al usuario registrado
+    waiter = fields.Char(string="Waiter", required=True, default=lambda self: self.env.user.name)
     currency_id=fields.Many2one("res.currency", string="Currency", default=lambda self:self.env.user.company_id.currency_id)
     total = fields.Monetary(string="Price", readonly=True, default=0)
     description= fields.Html(string="Description")
@@ -23,8 +25,15 @@ class OrdersModel(models.Model):
     #   - Finalizada: mesa finalizada y se han facturado todos los pagos / danger gris
     date = fields.Datetime(string="Date finish",help="Date finish",readonly=True)
 
+    @api.constrains("table")
+    def checkTabel(self):
+        if self.table==0:
+            raise ValidationError("The table cannot be 0 !!!!")
     def finalizar(self):
         self.ensure_one()
+        for a in self.quantiti:
+            if a.state!="FI":
+                raise ValidationError("There are products to deliver !!!!")
         self.order_active = False
         self.table_active = False
         if self.state == "AC":
