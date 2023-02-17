@@ -26,7 +26,7 @@ def readTable():
                 data=contoler.getOrder("",True)
                 if data!=False:
                     for a in data["data"]:
-                        if str(a["table"])==str(doble) and a["table_active"]==True:
+                        if str(a["table"])==str(doble) and a["active"]==True:
                             print("That table is occupied")
                             bien=False
                 if bien:
@@ -422,7 +422,7 @@ def delFood():
 #total only show
 #description a pelo
 #order_active boolean
-#table_active boolean
+#active boolean
 #quantiti lista
 #state PE-PO
 #date SET DATETIME EN EL PAGO
@@ -576,7 +576,7 @@ def payOrder():
     id=readNumber("ID","int")
     if contoler.getOrder(id,False):
         data=contoler.getOrder(id,True)
-        if data["data"][0]["table_active"]:
+        if data["data"][0]["active"]:
             contoler.payOrder(id)
             print("The order has been paid successfully")
         else:

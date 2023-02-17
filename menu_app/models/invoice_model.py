@@ -38,7 +38,8 @@ class InvoiceModel(models.Model):
         self.state = "CO"
         for line in self.lines:
             if line.orders.state=="PE":
-                line.orders.state=="FI"
+                line.orders.state="FI"
+                line.orders.active = False
         return True
 
     def print_report(self):

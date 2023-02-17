@@ -51,7 +51,7 @@ class MenuApp(http.Controller):
             domain=[("id","=", orderid)]
         else:
             domain=[]
-        orderdata = http.request.env["menu_app.orders_model"].sudo().search_read(domain,["table","table_active","customer","waiter","total","description","quantiti","state","date"])
+        orderdata = http.request.env["menu_app.orders_model"].sudo().search_read(domain,["table","active","customer","waiter","total","description","quantiti","state","date"])
         for rec in orderdata:
             if rec["date"]!=False:
                 rec["date"]=rec["date"].isoformat()

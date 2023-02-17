@@ -5,11 +5,6 @@
         <field name="model">menu_app.quantiti_model</field>
         <field name="arch" type="xml">
           <form string="Quantiti">
-            <header>
-                <button name="ready" type="object" string="Ready" class="oe_highlight" attrs="{'invisible': [('state','!=', 'PE')]}"/>
-                <button name="ready" type="object" string="Finish" class="oe_highlight" attrs="{'invisible': [('state','!=', 'RD')]}"/>
-                <field name="state" widget="statusbar"></field>
-            </header>
             <sheet>
                 <group name="left">
                     <field name="quantiti" readonly="True"/> 
@@ -82,10 +77,12 @@
         <field name="name">Quantity Form Waiter</field>
         <field name="model">menu_app.quantiti_model</field>
         <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
           <xpath expr="//form//sheet" position="before">
             <header>
               <button name="readyBackWaiter" type="object" string="Finish" class="oe_highlight"/>
+              <field name="state" widget="statusbar"></field>
             </header>
           </xpath>     
         </field>
@@ -96,10 +93,12 @@
       <field name="name">Quantity Form Barman</field>
       <field name="model">menu_app.quantiti_model</field>
       <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+      <field name="mode">primary</field>
       <field name="arch" type="xml">
         <xpath expr="//form//sheet" position="before">
           <header>
             <button name="readyBackBarman" type="object" string="Ready" class="oe_highlight"/>
+            <field name="state" widget="statusbar"></field>
           </header>
         </xpath>     
       </field>
@@ -111,10 +110,12 @@
     <field name="name">Quantity Form Cooker</field>
     <field name="model">menu_app.quantiti_model</field>
     <field name="inherit_id" ref="menu_app.quantiti_model_form"/>
+    <field name="mode">primary</field>
     <field name="arch" type="xml">
       <xpath expr="//form//sheet" position="before">
         <header>
           <button name="readyBackCooker" type="object" string="Ready" class="oe_highlight"/>
+          <field name="state" widget="statusbar"></field>
         </header>
       </xpath>     
     </field>
@@ -122,14 +123,14 @@
      <!--  actions opening views on models -->
      <!-- GENERAL -->
       <record model="ir.actions.act_window" id="menu_app.action_window_quantiti">
-        <field name="name">Quantiti window</field>
+        <field name="name">Order status Line</field>
         <field name="res_model">menu_app.quantiti_model</field>
         <field name="view_mode">tree,form</field>
       </record>
 
       <!-- CAMARERO -->
-      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_camarero">
-        <field name="name">Quantiti window</field>
+      <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_waiter">
+        <field name="name">Order status Line</field>
         <field name="res_model">menu_app.quantiti_model</field>
         <field name="domain">[('state', '=',  'RD')]</field> 
         <field name="view_mode">tree</field>
@@ -140,7 +141,7 @@
 
       <!-- BARMAN -->
       <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_barman">
-        <field name="name">Quantiti window</field>
+        <field name="name">Order status Line</field>
         <field name="res_model">menu_app.quantiti_model</field>
         <field name="domain">[('destination', '=',  'BARRA'),('state', '=',  'PE')]</field> 
         <field name="view_mode">tree</field>
@@ -151,7 +152,7 @@
 
       <!-- COCINERO -->
       <record model="ir.actions.act_window" id="menu_app.action_window_quantiti_cocinero">
-        <field name="name">Quantiti window</field>
+        <field name="name">Order status Line</field>
         <field name="res_model">menu_app.quantiti_model</field>
         <field name="domain">[('destination', '=',  'COCINA'),('state', '=',  'PE')]</field> 
         <field name="view_mode">tree</field>

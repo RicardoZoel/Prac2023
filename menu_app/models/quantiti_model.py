@@ -33,9 +33,8 @@ class QuantitiModel(models.Model):
                'res_model': 'menu_app.quantiti_model',
                'domain': [('state', '=',  'RD')],
                'view_id': False,
+               'views':[(self.env.ref('menu_app.quantiti_list').id,'tree'),(self.env.ref('menu_app.quantiti_model_form_inherit_camarero').id,'form')],
                'type': 'ir.actions.act_window',
-               'target': 'current',
-               'nodestroy': True
           }
     def readyBackBarman(self):
         
@@ -49,8 +48,7 @@ class QuantitiModel(models.Model):
                'domain': [('destination', '=',  'BARRA'),('state', '=',  'PE')],
                'view_id': False,
                'type': 'ir.actions.act_window',
-               'target': 'current',
-               'nodestroy': True
+               'views':[(self.env.ref('menu_app.quantiti_list').id,'tree'),(self.env.ref('menu_app.quantiti_model_form_inherit_barman').id,'form')],
           }
     def readyBackCooker(self):
         
@@ -64,8 +62,7 @@ class QuantitiModel(models.Model):
                'domain': [('destination', '=',  'COCINA'),('state', '=',  'PE')],
                'view_id': False,
                'type': 'ir.actions.act_window',
-               'target': 'current',
-               'nodestroy': True
+               'views':[(self.env.ref('menu_app.quantiti_list').id,'tree'),(self.env.ref('menu_app.quantiti_model_form_inherit_cocinero').id,'form')],
           }
     """ ======================== """
     @api.depends('orders','orders.table')
