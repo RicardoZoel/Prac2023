@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 class OrdersModel(models.Model):
     _name = 'menu_app.orders_model'
     _description = 'Orders Model'
-    _sql_constraints = [('orders_unique_ref','UNIQUE (table)','active and table must be unique!!')]
 
     table = fields.Integer(string="Table", required=True, index=True)
     customer = fields.Char(string="Client", required=True, default="Client")
@@ -29,14 +28,7 @@ class OrdersModel(models.Model):
     def checkTabel(self):
         if self.table==0:
             raise ValidationError("The table cannot be 0 !!!!")
-    
-    @api.constrains("table","active")
-    def noRepeat(self):
-        for a in self:
-            for b in self:
-                if a.table == b.table and a.id != b.id:
-                    if a.active == True:
-                        raise ValidationError("The cannot be 2 active tables with the same numbers")
+            
     def finalizar(self):
         self.ensure_one()
         for a in self.quantiti:
